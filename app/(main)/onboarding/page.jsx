@@ -4,10 +4,8 @@ import { redirect } from "next/navigation";
 import OnboardingForm from "./_components/onboarding-form";
 
 const OnboardingPage = async () => {
-    //Check if user is already onboarded
-    const { isOnboarded } = await getUserOnboardingStatus();
 
-    //console.log("ONBOARDING PAGE:", isOnboarded);
+    const { isOnboarded } = await getUserOnboardingStatus();
 
     if(isOnboarded) {
         redirect("/dashboard");

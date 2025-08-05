@@ -1,16 +1,16 @@
 "use server";
 
 import { db } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
 import { generateAIInsights } from "./dashboard";
+import { auth } from "@/lib/auth";
 
 export async function updateUser(data) {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  const { user : authUser } = await auth();
+  if (!authUser) throw new Error("Unauthorized");
 
   const user = await db.user.findUnique({
     where: {
-      clerkUserId: userId,
+      firebaseUid: authUser.firebaseUid,
     },
   });
 
@@ -25,7 +25,7 @@ export async function updateUser(data) {
             industry: data.industry,
           },
         });
-        // If industry doesn't exist, create it with default values - will replace it with ai later
+        // If industry doesn't exist, create it with default values
         if (!industryInsight) {
           const insights = await generateAIInsights(data.industry);
 
@@ -66,26 +66,25 @@ export async function updateUser(data) {
 }
 
 export async function getUserOnboardingStatus() {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
-
-  const user = await db.user.findUnique({
-    where: {
-      clerkUserId: userId,
-    },
-  });
-
-  if (!user) throw new Error("User not found");
+  const { user : authUser } = await auth();
+  if (!authUser) {
+    // If authUser is not available, we can return a default response
+    return { isOnboarded: false };
+  }
 
   try {
     const user = await db.user.findUnique({
       where: {
-        clerkUserId: userId,
+        firebaseUid: authUser.firebaseUid,
       },
       select: {
         industry: true,
       },
     });
+
+    if (!user) {
+        return { isOnboarded: false };
+    }
 
     return {
       isOnboarded: !!user?.industry,

@@ -1,9 +1,3 @@
-{/*const AICoverLettersPage = () => {
-    return <div>AICoverLettersPage</div>;
-};
-
-export default AICoverLettersPage;*/}
-
 import { getCoverLetters } from "@/actions/cover-letter";
 import Link from "next/link";
 import { Plus } from "lucide-react";

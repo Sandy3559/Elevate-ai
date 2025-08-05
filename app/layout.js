@@ -2,9 +2,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/header";
-import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
 import { Toaster } from "sonner";
+import { AuthProvider } from "@/context/AuthContext";
 
 const inter = Inter({subsets:["latin"]});
 
@@ -15,11 +14,6 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider
-    appearance={{
-      baseTheme: dark,
-    }}
-    >
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.className}`}
@@ -30,6 +24,7 @@ export default function RootLayout({ children }) {
             enableSystem
             disableTransitionOnChange
           >
+            <AuthProvider>
             {/*header*/}
             <Header/>
             <main className="min-h-screen">
@@ -42,9 +37,9 @@ export default function RootLayout({ children }) {
                 <p>Made with ❤️ by Satyam Raj</p>
               </div>
             </footer>
+            </AuthProvider>
           </ThemeProvider>
       </body>
     </html>
-    </ClerkProvider>
   );
 }

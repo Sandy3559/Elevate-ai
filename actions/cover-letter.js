@@ -1,18 +1,18 @@
 "use server";
 
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
 
 export async function generateCoverLetter(data) {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  const { user:authUser } = await auth();
+  if (!authUser) throw new Error("Unauthorized");
 
   const user = await db.user.findUnique({
-    where: { clerkUserId: userId },
+    where: { firebaseUid: authUser.firebaseUid },
   });
 
   if (!user) throw new Error("User not found");
@@ -65,11 +65,11 @@ export async function generateCoverLetter(data) {
 }
 
 export async function getCoverLetters() {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  const { user:authUser } = await auth();
+  if (!authUser) throw new Error("Unauthorized");
 
   const user = await db.user.findUnique({
-    where: { clerkUserId: userId },
+    where: { firebaseUid: authUser.firebaseUid },
   });
 
   if (!user) throw new Error("User not found");
@@ -85,11 +85,11 @@ export async function getCoverLetters() {
 }
 
 export async function getCoverLetter(id) {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  const { user:authUser } = await auth();
+  if (!authUser) throw new Error("Unauthorized");
 
   const user = await db.user.findUnique({
-    where: { clerkUserId: userId },
+    where: { firebaseUid: authUser.firebaseUid },
   });
 
   if (!user) throw new Error("User not found");
@@ -103,11 +103,11 @@ export async function getCoverLetter(id) {
 }
 
 export async function deleteCoverLetter(id) {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  const { user : authUser } = await auth();
+  if (!authUser) throw new Error("Unauthorized");
 
   const user = await db.user.findUnique({
-    where: { clerkUserId: userId },
+    where: { firebaseUid: authUser.firebaseUid },
   });
 
   if (!user) throw new Error("User not found");

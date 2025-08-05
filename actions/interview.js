@@ -1,7 +1,7 @@
 "use server";
 
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -10,12 +10,12 @@ const model = genAI.getGenerativeModel({
 });
 
 export async function generateQuiz() {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  const { user:authUser } = await auth();
+  if (!authUser) throw new Error("Unauthorized");
 
   const user = await db.user.findUnique({
     where: {
-      clerkUserId: userId,
+      firebaseUid: authUser.firebaseUid,
     },
   });
 
@@ -59,12 +59,12 @@ export async function generateQuiz() {
 }
 
 export async function saveQuizResult(questions, answers, score) {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  const { user:authUser } = await auth();
+  if (!authUser) throw new Error("Unauthorized");
 
   const user = await db.user.findUnique({
     where: {
-      clerkUserId: userId,
+      firebaseUid: authUser.firebaseUid,
     },
   });
 
@@ -130,12 +130,12 @@ export async function saveQuizResult(questions, answers, score) {
 }
 
 export async function getAssessments() {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  const { user:authUser } = await auth();
+  if (!authUser) throw new Error("Unauthorized");
 
   const user = await db.user.findUnique({
     where: {
-      clerkUserId: userId,
+      firebaseUid: authUser.firebaseUid,
     },
   });
 

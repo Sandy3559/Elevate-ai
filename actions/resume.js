@@ -1,7 +1,7 @@
 "use server";
 
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { revalidatePath } from "next/cache";
 
@@ -11,12 +11,12 @@ const model = genAI.getGenerativeModel({
 });
 
 export async function saveResume(content) {
-    const { userId } = await auth();
-      if (!userId) throw new Error("Unauthorized");
+    const { user : authUser } = await auth();
+      if (!authUser) throw new Error("Unauthorized");
     
       const user = await db.user.findUnique({
         where: {
-          clerkUserId: userId,
+          firebaseUid: authUser.firebaseUid,
         },
       });
     
@@ -45,11 +45,11 @@ export async function saveResume(content) {
 }
 
 export async function getResume() {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  const { user : authUser } = await auth();
+  if (!authUser) throw new Error("Unauthorized");
 
   const user = await db.user.findUnique({
-    where: { clerkUserId: userId },
+    where: { firebaseUid: authUser.firebaseUid },
   });
 
   if (!user) throw new Error("User not found");
@@ -62,11 +62,11 @@ export async function getResume() {
 }
 
 export async function improveWithAI({ current, type }) {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  const { user: authUser } = await auth();
+  if (!authUser) throw new Error("Unauthorized");
 
   const user = await db.user.findUnique({
-    where: { clerkUserId: userId },
+    where: { firebaseUid: authUser.firebaseUid },
     include: {
       industryInsight: true,
     },

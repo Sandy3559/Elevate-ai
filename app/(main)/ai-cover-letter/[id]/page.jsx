@@ -1,11 +1,3 @@
-{/*const CoverLetter = async ({params}) => {
-    const id = await params.id;
-
-    return <div>CoverLetter: {id}</div>;
-};
-
-export default CoverLetter;*/}
-
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";

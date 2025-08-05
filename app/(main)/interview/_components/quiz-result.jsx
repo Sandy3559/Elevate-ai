@@ -14,13 +14,10 @@ const QuizResult = ({ result, hideStartNew = false, onStartNew }) => {
       </h1>
 
       <CardContent className="space-y-6">
-        {/*Score Overview */}
         <div className="text-center space-y-2">
           <h3 className="text-2xl font-bold">{result.quizScore.toFixed(1)}%</h3>
           <Progress value={result.quizScore} className="w-full" />
         </div>
-
-        {/*Improvement Tip*/}
         {result.improvementTip && (
           <div className="bg-muted p-4 rounded-lg">
             <p className="font-medium">Improvement Tip:</p>

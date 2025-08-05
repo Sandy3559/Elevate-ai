@@ -16,7 +16,7 @@ datasource db {
 
 model User {
   id            String    @id @default(uuid())
-  clerkUserId   String    @unique // clerk user id
+  firebaseUid   String    @unique // firebase user id
   email         String    @unique
   name          String?
   imageUrl      String?

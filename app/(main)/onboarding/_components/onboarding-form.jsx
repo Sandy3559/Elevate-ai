@@ -51,7 +51,6 @@ const OnboardingForm = ({ industries }) => {
         if (updateResult?.success && !updateLoading){
             toast.success("Profile completed successfully!");
             router.push("/dashboard");
-            //console.log("Profile update successful, refreshing router");
             router.refresh();
         }
     }, [updateResult, updateLoading]);

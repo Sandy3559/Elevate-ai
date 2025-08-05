@@ -13,17 +13,16 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import EntryForm from "./entry-form";
 import { entriesToMarkdown } from "@/app/lib/helper";
-import { useUser } from "@clerk/nextjs";
 import MDEditor from "@uiw/react-md-editor";
 import { toast } from "sonner";
-//import { html2pdf } from "html2pdf.js/dist/html2pdf.min.js";
+import { useAuth } from "@/context/AuthContext";
 
 
 const ResumeBuilder = ({ initialContent }) => {
   const [activeTab, setActiveTab] = useState("edit");
   const [resumeMode, setResumeMode] = useState("preview");
   const [previewContent, setPreviewContent] = useState(initialContent);
-  const { user } = useUser();
+  const { user } = useAuth();
   const [isGenerating, setIsGenerating] = useState(false);
 
   const {
@@ -74,7 +73,7 @@ const ResumeBuilder = ({ initialContent }) => {
     if (contactInfo.twitter) parts.push(`🐦 [Twitter](${contactInfo.twitter})`);
 
     return parts.length > 0
-      ? `## <div align="center">${user.fullName}</div>
+      ? `## <div align="center">${user?.displayName || "Your Name"}</div>
         \n\n<div align="center">\n\n${parts.join(" | ")}\n\n</div>`
       : "";
   };
@@ -110,26 +109,6 @@ const ResumeBuilder = ({ initialContent }) => {
     } 
   };
 
-  {/*const generatePDF = async () => {
-    setIsGenerating(true);
-    try {
-      const element = document.getElementById("resume-pdf");
-      const opt = {
-        margin: [15, 15],
-        filename: "resume.pdf",
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      };
-
-      await html2pdf().set(opt).from(element).save();
-    } catch (error) {
-      console.error("PDF generation error:", error);
-    } finally {
-      setIsGenerating(false);
-    }
-  };*/}
-
   return (
     <div className="space-y-4">
       <div className="flex flex-col md:flex-row justify-between items-center gap-2">
@@ -160,19 +139,6 @@ const ResumeBuilder = ({ initialContent }) => {
             <Download className="h-4 w-4"/>
             Download PDF
           </Button>
-          {/*<Button onClick={generatePDF} disabled={isGenerating}>
-            {isGenerating ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Generating PDF...
-              </>
-            ) : (
-              <>
-                <Download className="h-4 w-4" />
-                Download PDF
-              </>
-            )}
-          </Button>*/}
         </div>
       </div>
 
