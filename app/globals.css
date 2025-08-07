@@ -202,3 +202,30 @@
 .hero-image.scrolled {
   transform: rotateX(0deg) scale(1) translateY(40px);
 }
+
+.pdf-container {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+.pdf-container h1,
+.pdf-container h2,
+.pdf-container h3,
+.pdf-container h4,
+.pdf-container h5,
+.pdf-container h6 {
+  color: #000000 !important;
+}
+
+.pdf-container p,
+.pdf-container li,
+.pdf-container span {
+  color: #333333 !important;
+}
+
+.pdf-container a {
+  color: #0000ee !important;
+  text-decoration: underline !important;
+}

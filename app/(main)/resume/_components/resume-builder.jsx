@@ -1,6 +1,6 @@
 "use client";
 
-import { saveResume } from "@/actions/resume";
+import { improveWithAI, saveResume } from "@/actions/resume";
 import { resumeSchema } from "@/app/lib/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import useFetch from "@/hooks/use-fetch";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertTriangle, Download, Edit, Loader2, Monitor, Save } from "lucide-react";
+import {
+  AlertTriangle,
+  Download,
+  Edit,
+  Loader2,
+  Monitor,
+  Save,
+  Sparkles,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import EntryForm from "./entry-form";
@@ -16,7 +24,6 @@ import { entriesToMarkdown } from "@/app/lib/helper";
 import MDEditor from "@uiw/react-md-editor";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
-
 
 const ResumeBuilder = ({ initialContent }) => {
   const [activeTab, setActiveTab] = useState("edit");
@@ -26,10 +33,22 @@ const ResumeBuilder = ({ initialContent }) => {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const {
+    loading: isImprovingSummary,
+    fn: improveSummaryFn,
+    data: improvedSummary,
+  } = useFetch(improveWithAI);
+  const {
+    loading: isImprovingSkills,
+    fn: improveSkillsFn,
+    data: improvedSkills,
+  } = useFetch(improveWithAI);
+
+  const {
     control,
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(resumeSchema),
@@ -62,6 +81,18 @@ const ResumeBuilder = ({ initialContent }) => {
       setPreviewContent(newContent ? newContent : initialContent);
     }
   }, [formValues, activeTab]);
+
+  useEffect(() => {
+    if (improvedSummary) {
+      setValue("summary", improvedSummary);
+    }
+  }, [improvedSummary, setValue]);
+
+  useEffect(() => {
+    if (improvedSkills) {
+      setValue("skills", improvedSkills);
+    }
+  }, [improvedSkills, setValue]);
 
   const getContactMarkdown = () => {
     const { contactInfo } = formValues;
@@ -106,7 +137,7 @@ const ResumeBuilder = ({ initialContent }) => {
       await saveResumeFn(previewContent);
     } catch (error) {
       console.error("Save error:", error);
-    } 
+    }
   };
 
   return (
@@ -117,11 +148,7 @@ const ResumeBuilder = ({ initialContent }) => {
         </h1>
 
         <div className="space-x-2">
-          <Button
-            variant="destructive"
-            onClick={onSubmit}
-            disabled={isSaving}
-          >
+          <Button variant="destructive" onClick={onSubmit} disabled={isSaving}>
             {isSaving ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -136,7 +163,7 @@ const ResumeBuilder = ({ initialContent }) => {
           </Button>
 
           <Button>
-            <Download className="h-4 w-4"/>
+            <Download className="h-4 w-4" />
             Download PDF
           </Button>
         </div>
@@ -148,7 +175,7 @@ const ResumeBuilder = ({ initialContent }) => {
           <TabsTrigger value="preview">Markdown</TabsTrigger>
         </TabsList>
         <TabsContent value="edit">
-          <form className="space-y-8" >
+          <form className="space-y-8">
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Contact Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg bg-muted/50">
@@ -213,7 +240,6 @@ const ResumeBuilder = ({ initialContent }) => {
               </div>
             </div>
 
-            
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Professional Summary</h3>
               <Controller
@@ -231,9 +257,33 @@ const ResumeBuilder = ({ initialContent }) => {
               {errors.summary && (
                 <p className="text-sm text-red-500">{errors.summary.message}</p>
               )}
+
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() =>
+                  improveSummaryFn({
+                    current: watch("summary"),
+                    type: "summary",
+                  })
+                }
+                disabled={isImprovingSummary || !watch("summary")}
+              >
+                {isImprovingSummary ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Improving...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Improve with AI
+                  </>
+                )}
+              </Button>
             </div>
 
-            
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Skills</h3>
               <Controller
@@ -251,9 +301,30 @@ const ResumeBuilder = ({ initialContent }) => {
               {errors.skills && (
                 <p className="text-sm text-red-500">{errors.skills.message}</p>
               )}
+
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() =>
+                  improveSkillsFn({ current: watch("skills"), type: "skills" })
+                }
+                disabled={isImprovingSkills || !watch("skills")}
+              >
+                {isImprovingSkills ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Improving...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Improve with AI
+                  </>
+                )}
+              </Button>
             </div>
 
-            
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Work Experience</h3>
               <Controller
@@ -274,7 +345,6 @@ const ResumeBuilder = ({ initialContent }) => {
               )}
             </div>
 
-            
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Education</h3>
               <Controller
@@ -295,7 +365,6 @@ const ResumeBuilder = ({ initialContent }) => {
               )}
             </div>
 
-            
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Projects</h3>
               <Controller
@@ -318,37 +387,37 @@ const ResumeBuilder = ({ initialContent }) => {
           </form>
         </TabsContent>
         <TabsContent value="preview">
-            <Button
-              variant="link"
-              type="button"
-              className="mb-2"
-              onClick={() =>
-                setResumeMode(resumeMode === "preview" ? "edit" : "preview")
-              }
-            >
-              {resumeMode === "preview" ? (
-                <>
-                  <Edit className="h-4 w-4" />
-                  Edit Resume
-                </>
-              ) : (
-                <>
-                  <Monitor className="h-4 w-4" />
-                  Show Preview
-                </>
-              )}
-            </Button>
+          <Button
+            variant="link"
+            type="button"
+            className="mb-2"
+            onClick={() =>
+              setResumeMode(resumeMode === "preview" ? "edit" : "preview")
+            }
+          >
+            {resumeMode === "preview" ? (
+              <>
+                <Edit className="h-4 w-4" />
+                Edit Resume
+              </>
+            ) : (
+              <>
+                <Monitor className="h-4 w-4" />
+                Show Preview
+              </>
+            )}
+          </Button>
 
-            {resumeMode !== "preview" && (
-                <div className="flex p-3 gap-2 items-center border-2 border-yellow-600 text-yellow-600 rounded mb-2">
+          {resumeMode !== "preview" && (
+            <div className="flex p-3 gap-2 items-center border-2 border-yellow-600 text-yellow-600 rounded mb-2">
               <AlertTriangle className="h-5 w-5" />
               <span className="text-sm">
                 You will lose editied markdown if you update the form data.
               </span>
             </div>
-            )}
+          )}
 
-            <div className="border rounded-lg">
+          <div className="border rounded-lg">
             <MDEditor
               value={previewContent}
               onChange={setPreviewContent}
@@ -356,7 +425,7 @@ const ResumeBuilder = ({ initialContent }) => {
               preview={resumeMode}
             />
           </div>
-            <div className="hidden">
+          <div className="hidden">
             <div id="resume-pdf">
               <MDEditor.Markdown
                 source={previewContent}
