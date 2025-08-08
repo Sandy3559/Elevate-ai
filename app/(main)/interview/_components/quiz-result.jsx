@@ -1,3 +1,4 @@
+import React from 'react';
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { CheckCircle2, Trophy, XCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";

@@ -1,5 +1,6 @@
 "use client";
 
+import React from 'react';
 import { generateQuiz, saveQuizResult } from "@/actions/interview";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";

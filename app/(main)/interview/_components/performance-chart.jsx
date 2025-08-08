@@ -1,5 +1,6 @@
 "use client";
 
+import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";

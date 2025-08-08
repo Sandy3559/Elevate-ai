@@ -1,3 +1,4 @@
+import React from 'react';
 import { getIndustryInsights } from "@/actions/dashboard";
 import { getUserOnboardingStatus } from "@/actions/user";
 import { redirect } from "next/navigation";

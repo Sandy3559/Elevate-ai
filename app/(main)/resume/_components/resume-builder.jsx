@@ -1,5 +1,6 @@
 "use client";
 
+import React from 'react';
 import { improveWithAI, saveResume } from "@/actions/resume";
 import { resumeSchema } from "@/app/lib/schema";
 import { Button } from "@/components/ui/button";

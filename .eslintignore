@@ -1,0 +1,5 @@
+# Ignore Prisma's auto-generated files
+lib/generated/prisma/
+
+# Ignore Next.js build directory
+.next/

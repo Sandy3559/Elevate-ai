@@ -1,4 +1,6 @@
 "use client";
+
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { updateProfile } from 'firebase/auth';

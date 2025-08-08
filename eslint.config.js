@@ -9,11 +9,28 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
-      }
-    }
+      },
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
   },
   pluginJs.configs.recommended,
-  pluginReactConfig,
+  {
+    ...pluginReactConfig,
+    settings: {
+      react: {
+        version: "detect", // Automatically detect the React version
+      },
+    },
+    rules: {
+      ...pluginReactConfig.rules,
+      "react/react-in-jsx-scope": "off", // Turn off the rule requiring React to be in scope
+      "react/prop-types": "off", // Turn off prop-types validation
+    },
+  },
   {
     files: ["**/*.{js,mjs,cjs,jsx}"],
     plugins: {
@@ -22,7 +39,7 @@ export default [
     rules: {
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs["core-web-vitals"].rules,
-      "no-unused-vars": "warn", // Set to "warn" instead of "error"
+      "no-unused-vars": "warn",
     },
-  }
+  },
 ];
