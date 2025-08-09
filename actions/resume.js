@@ -46,13 +46,13 @@ export async function saveResume(content) {
 
 export async function getResume() {
   const { user: authUser } = await auth();
-  if (!authUser) throw new Error("Unauthorized");
+  if (!authUser) return null;
 
   const user = await db.user.findUnique({
     where: { firebaseUid: authUser.firebaseUid },
   });
 
-  if (!user) throw new Error("User not found");
+  if (!user) return null;
 
   return await db.resume.findUnique({
     where: {

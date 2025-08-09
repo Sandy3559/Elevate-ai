@@ -4,6 +4,14 @@ import pluginReactConfig from "eslint-plugin-react/configs/recommended.js";
 import nextPlugin from "@next/eslint-plugin-next";
 
 export default [
+  // Ignored files
+  {
+    ignores: [
+      "lib/generated/prisma/",
+      ".next/",
+    ],
+  },
+
   {
     languageOptions: {
       globals: {

@@ -1,7 +1,6 @@
 "use client";
 
 import React from 'react';
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -64,7 +63,7 @@ export default function CoverLetterGenerator() {
         <CardHeader>
           <CardTitle>Job Details</CardTitle>
           <CardDescription>
-            Provide information about the position you're applying for
+            Provide information about the position you&apos;re applying for
           </CardDescription>
         </CardHeader>
         <CardContent>

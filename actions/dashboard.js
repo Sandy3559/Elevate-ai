@@ -40,7 +40,7 @@ export const generateAIInsights = async (industry) => {
 
 export async function getIndustryInsights() {
     const {user : authUser} = await auth();
-        if(!authUser) throw new Error("Unauthorized");
+        if(!authUser) return null;
     
         const user = await db.user.findUnique({
             where: {
@@ -51,7 +51,7 @@ export async function getIndustryInsights() {
             },
         });
     
-        if (!user) throw new Error("User not found");
+        if (!user) return null;
 
         if(!user.industryInsight){
             const insights = await generateAIInsights(user.industry);

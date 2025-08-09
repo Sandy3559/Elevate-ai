@@ -66,13 +66,13 @@ export async function generateCoverLetter(data) {
 
 export async function getCoverLetters() {
   const { user:authUser } = await auth();
-  if (!authUser) throw new Error("Unauthorized");
+  if (!authUser) return [];
 
   const user = await db.user.findUnique({
     where: { firebaseUid: authUser.firebaseUid },
   });
 
-  if (!user) throw new Error("User not found");
+  if (!user) return [];
 
   return await db.coverLetter.findMany({
     where: {
@@ -86,13 +86,13 @@ export async function getCoverLetters() {
 
 export async function getCoverLetter(id) {
   const { user:authUser } = await auth();
-  if (!authUser) throw new Error("Unauthorized");
+  if (!authUser) return null;
 
   const user = await db.user.findUnique({
     where: { firebaseUid: authUser.firebaseUid },
   });
 
-  if (!user) throw new Error("User not found");
+  if (!user) return null;
 
   return await db.coverLetter.findUnique({
     where: {

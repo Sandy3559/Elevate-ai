@@ -131,7 +131,7 @@ export async function saveQuizResult(questions, answers, score) {
 
 export async function getAssessments() {
   const { user:authUser } = await auth();
-  if (!authUser) throw new Error("Unauthorized");
+  if (!authUser) return [];
 
   const user = await db.user.findUnique({
     where: {
@@ -139,7 +139,7 @@ export async function getAssessments() {
     },
   });
 
-  if (!user) throw new Error("User not found");
+  if (!user) return [];
 
   try {
     const assessments = await db.assessment.findMany({
@@ -154,6 +154,6 @@ export async function getAssessments() {
     return assessments;
   } catch (error) {
     console.error("Error fetching assessments: ", error);
-    throw new Error("Failed to fetch assessments");
+    return [];
   }
 }

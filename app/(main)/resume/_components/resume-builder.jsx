@@ -31,7 +31,6 @@ const ResumeBuilder = ({ initialContent }) => {
   const [resumeMode, setResumeMode] = useState("preview");
   const [previewContent, setPreviewContent] = useState(initialContent);
   const { user } = useAuth();
-  const [isGenerating, setIsGenerating] = useState(false);
 
   const {
     loading: isImprovingSummary,
@@ -47,7 +46,6 @@ const ResumeBuilder = ({ initialContent }) => {
   const {
     control,
     register,
-    handleSubmit,
     watch,
     setValue,
     formState: { errors },
