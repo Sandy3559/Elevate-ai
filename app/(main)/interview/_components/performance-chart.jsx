@@ -1,26 +1,40 @@
 "use client";
 
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
-const PerformanceChart = ({assessments}) => {
-    const [chartData, setChartData] = useState([]);
+const PerformanceChart = ({ assessments }) => {
+  const [chartData, setChartData] = useState([]);
 
-    useEffect(() => {
-        if (assessments) {
-            const formattedData = assessments.map((assessment) => ({
-                date: format(new Date(assessment.createdAt), "MMM dd"),
-                score: assessment.quizScore,
-            }));
+  useEffect(() => {
+    if (assessments) {
+      const formattedData = [...assessments].reverse().map((assessment) => ({
+        date: format(new Date(assessment.createdAt), "MMM dd"),
+        score: assessment.quizScore,
+      }));
 
-            setChartData(formattedData);
-        }
-    }, [assessments]);
+      setChartData(formattedData);
+    }
+  }, [assessments]);
 
-    return (
+  return (
     <Card>
       <CardHeader>
         <CardTitle className="gradient-title text-3xl md:text-4xl">
@@ -51,13 +65,15 @@ const PerformanceChart = ({assessments}) => {
                   }
                 }}
               />
-              {<Line
-                type="monotone"
-                dataKey="score"
-                stroke="#FFFFFF"
-                activeDot={{ r: 8}}
-                strokeWidth={2}
-              />}
+              {
+                <Line
+                  type="monotone"
+                  dataKey="score"
+                  stroke="#FFFFFF"
+                  activeDot={{ r: 8 }}
+                  strokeWidth={2}
+                />
+              }
             </LineChart>
           </ResponsiveContainer>
         </div>

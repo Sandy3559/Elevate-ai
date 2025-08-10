@@ -46,7 +46,7 @@ const HeroSection = () => {
               Get Started
             </Button>
           </Link>
-          <Link href="/">
+          <Link href="/learn-more">
             <Button size="lg" variant="outline" className="px-8">
               Learn More
             </Button>

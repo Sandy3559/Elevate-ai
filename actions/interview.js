@@ -10,7 +10,7 @@ const model = genAI.getGenerativeModel({
 });
 
 export async function generateQuiz() {
-  const { user:authUser } = await auth();
+  const { user: authUser } = await auth();
   if (!authUser) throw new Error("Unauthorized");
 
   const user = await db.user.findUnique({
@@ -59,7 +59,7 @@ export async function generateQuiz() {
 }
 
 export async function saveQuizResult(questions, answers, score) {
-  const { user:authUser } = await auth();
+  const { user: authUser } = await auth();
   if (!authUser) throw new Error("Unauthorized");
 
   const user = await db.user.findUnique({
@@ -89,7 +89,7 @@ export async function saveQuizResult(questions, answers, score) {
       )
       .join("\n\n");
 
-      const improvementPrompt = `
+    const improvementPrompt = `
       The user got the following ${user.industry} technical interview questions wrong:
 
       ${wrongQuestionsText}
@@ -101,24 +101,23 @@ export async function saveQuizResult(questions, answers, score) {
     `;
 
     try {
-        const result = await model.generateContent(improvementPrompt);
-        const response = result.response;
-        improvementTip = response.text().trim();
-
+      const result = await model.generateContent(improvementPrompt);
+      const response = result.response;
+      improvementTip = response.text().trim();
     } catch (error) {
-        console.error("Error generating improvement tip:", error);
+      console.error("Error generating improvement tip:", error);
     }
   }
 
   try {
-    const assessment = await db.assessment.create ({
-        data: {
-            userId: user.id,
-            quizScore: score,
-            questions: questionResults,
-            category: "Technical",
-            improvementTip,
-        },
+    const assessment = await db.assessment.create({
+      data: {
+        userId: user.id,
+        quizScore: score,
+        questions: questionResults,
+        category: "Technical",
+        improvementTip,
+      },
     });
 
     return assessment;
@@ -126,11 +125,10 @@ export async function saveQuizResult(questions, answers, score) {
     console.error("Error saving quiz result:", error);
     throw new Error("Failed to save quiz result" + error.message);
   }
-
 }
 
 export async function getAssessments() {
-  const { user:authUser } = await auth();
+  const { user: authUser } = await auth();
   if (!authUser) return [];
 
   const user = await db.user.findUnique({
@@ -147,7 +145,7 @@ export async function getAssessments() {
         userId: user.id,
       },
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
     });
 
