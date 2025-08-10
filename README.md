@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ElevateAI
 
-## Getting Started
+**ElevateAI** is a web application that provides users with AI-powered tools to help them in their career development.  
+It helps users create resumes and cover letters, and also prepare for job interviews.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## ✨ Features
+- ****AI-powered resume and cover letter builder****  
+  &nbsp;&nbsp;&nbsp;&nbsp;Create professional, ATS-friendly resumes and cover letters tailored to your industry and skills.
+- ****Mock interviews****  
+  &nbsp;&nbsp;&nbsp;&nbsp;Practice with AI-generated questions specific to your target role and get feedback on your performance.
+- ****Industry insights****  
+&nbsp;&nbsp;&nbsp;&nbsp;Stay up-to-date with the latest trends, salary ranges, and in-demand skills in your field.
+- ****Personalized career guidance****  
+&nbsp;&nbsp;&nbsp;&nbsp;Get tailored recommendations to help you advance your career.
+
+---
+
+## 🛠 Technologies Used
+
+- ****Frontend:**** Next.js, React, Tailwind CSS, Shadcn/UI
+- ****Backend:**** Next.js API Routes, Prisma
+- ****Database:**** PostgreSQL
+- ****Authentication:**** Firebase Authentication
+- ****AI:**** Google Generative AI
+- ****Deployment:**** Vercel
+
+---
+
+## 📂 Project Structure
+
+```
+/app        → Main application code, including pages and API routes
+/components → Reusable React components
+/lib        → Utility functions, database client, authentication services
+/prisma     → Prisma schema and migration files
+/public     → Static assets (images, fonts)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🚀 Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📋 Prerequisites
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Node.js** (v18 or higher recommended)
+- **npm**, **yarn**, or **pnpm**
+- **PostgreSQL**
+- **Firebase project**
+- **Google AI API key**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📦 Installation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 1️⃣ Clone the repository
+```
+git clone https://github.com/sandy3559/elevate-ai.git
+cd elevate-ai
+```
+### 2️⃣ Install dependencies
+```
+npm install
+```
+### 3️⃣ Set up the database
+- Make sure you have PostgreSQL installed and running.
+- Create a .env file in the root of the project and add your database URL:
+```
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
+```
+- Run the migrations to create the necessary tables:
+```
+npx prisma migrate dev
+```
+### 4️⃣ Set up Firebase
+- Create a Firebase project at Firebase Console.
+- In your project settings, add a new web app and copy the configuration object.
+- In the .env file, add the following variables with your Firebase project credentials:
+```
+NEXT_PUBLIC_FIREBASE_API_KEY="YOUR_API_KEY"
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN="YOUR_AUTH_DOMAIN"
+NEXT_PUBLIC_FIREBASE_PROJECT_ID="YOUR_PROJECT_ID"
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET="YOUR_STORAGE_BUCKET"
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID="YOUR_MESSAGING_SENDER_ID"
+NEXT_PUBLIC_FIREBASE_APP_ID="YOUR_APP_ID"
+```
+- Generate a private key for the Firebase Admin SDK:
+  - Go to Service accounts in your Firebase project settings.
+  - Click Generate new private key (this will download a JSON file).
+  - Rename the downloaded file to firebase-service-account.json and place it in the root of your project.
+### 5️⃣ Set up Google AI
+- Get your Google AI API key from Google AI Studio.
+- Add the API key to your .env file:
+```
+GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
+```
+### 6️⃣ Run the development server
+```
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🚀 Deployment
+
+The easiest way to deploy this application is using the Vercel Platform.  
+For more details, see the Next.js deployment documentation.
+
