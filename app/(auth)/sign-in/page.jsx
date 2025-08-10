@@ -27,12 +27,20 @@ export default function SignInPage() {
       const userCredential = await signInWithEmailAndPassword(authClient, email, password);
       const idToken = await userCredential.user.getIdToken();
 
-      await fetch('/api/auth/session', {
+      const response = await fetch('/api/auth/session', { // CHANGED: capture the response
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ idToken }),
       });
 
+      if (!response.ok) {
+        throw new Error("Session creation failed.");
+      }
+
+      // This is the critical part: Refresh the router to update its state and cookies
+      router.refresh(); 
+
+      // Then push to the new route
       router.push('/dashboard');
       
     } catch (err) {
