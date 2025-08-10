@@ -18,6 +18,8 @@ export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false); 
   const router = useRouter();
 
+  // In app/(auth)/sign-in/page.jsx
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -27,26 +29,25 @@ export default function SignInPage() {
       const userCredential = await signInWithEmailAndPassword(authClient, email, password);
       const idToken = await userCredential.user.getIdToken();
 
-      const response = await fetch('/api/auth/session', { // CHANGED: capture the response
+      const response = await fetch('/api/auth/session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ idToken }),
       });
 
       if (!response.ok) {
-        throw new Error("Session creation failed.");
+        const data = await response.json();
+        throw new Error(data.error || "Session creation failed.");
       }
 
-      // This is the critical part: Refresh the router to update its state and cookies
-      router.refresh(); 
-
-      // Then push to the new route
-      router.push('/dashboard');
+      // CHANGED: Use a full page navigation instead of client-side routing
+      window.location.href = '/dashboard';
       
     } catch (err) {
       setError(err.message);
     } finally {
-        setIsLoading(false); 
+      // Note: This might not run if the page navigates away, which is fine.
+      setIsLoading(false); 
     }
   };
 
