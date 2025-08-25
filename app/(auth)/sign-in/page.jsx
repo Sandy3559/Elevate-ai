@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { authClient } from '@/lib/firebase';
 import { Button } from "@/components/ui/button";
@@ -16,9 +15,6 @@ export default function SignInPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false); 
-  const router = useRouter();
-
-  // In app/(auth)/sign-in/page.jsx
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,14 +35,12 @@ export default function SignInPage() {
         const data = await response.json();
         throw new Error(data.error || "Session creation failed.");
       }
-
-      // CHANGED: Use a full page navigation instead of client-side routing
+      
       window.location.href = '/dashboard';
       
     } catch (err) {
       setError(err.message);
     } finally {
-      // Note: This might not run if the page navigates away, which is fine.
       setIsLoading(false); 
     }
   };
