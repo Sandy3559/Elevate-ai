@@ -6,7 +6,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({
-  model: "gemini-2.5-pro",
+  model: "gemini-1.5-flash",
 });
 
 export async function generateQuiz() {
@@ -49,12 +49,23 @@ export async function generateQuiz() {
     const text = response.text();
 
     const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
-    const quiz = JSON.parse(cleanedText);
 
-    return quiz.questions;
+    // Check if the cleaned text is a valid JSON
+    try {
+      const quiz = JSON.parse(cleanedText);
+      if (quiz && quiz.questions) {
+        return quiz.questions;
+      } else {
+        throw new Error("Invalid quiz structure in AI response");
+      }
+    } catch (parseError) {
+      console.error("Error parsing quiz JSON: ", parseError);
+      console.error("Original AI response text: ", text);
+      throw new Error("Failed to parse quiz questions from AI response.");
+    }
   } catch (error) {
     console.error("Error generating quiz: ", error);
-    throw new Error("Failed to generate quiz questions " + error.message);
+    throw new Error("Failed to generate quiz questions. " + error.message);
   }
 }
 

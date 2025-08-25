@@ -18,11 +18,13 @@ import { useEffect, useState } from "react";
 import { BarLoader } from "react-spinners";
 import { toast } from "sonner";
 import QuizResult from "./quiz-result";
+import { useAuth } from "@/context/AuthContext";
 
 const Quiz = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [showExplanation, setShowExplanation] = useState(false);
+  const { user } = useAuth();
 
   const {
     loading: generatingQuiz,
@@ -36,8 +38,6 @@ const Quiz = () => {
     data: resultData,
     setData: setResultData,
   } = useFetch(saveQuizResult);
-
-  console.log(resultData);
 
   useEffect(() => {
     if (quizData) {
@@ -82,6 +82,10 @@ const Quiz = () => {
   };
 
   const startNewQuiz = () => {
+    if (!user) {
+        toast.error("You must be logged in to start a quiz.");
+        return;
+    }
     setCurrentQuestion(0);
     setAnswers([]);
     setShowExplanation(false);
@@ -114,7 +118,7 @@ const Quiz = () => {
           </p>
         </CardContent>
         <CardFooter>
-          <Button onClick={generateQuizFn} className="w-full">
+          <Button onClick={startNewQuiz} className="w-full">
             Start Quiz
           </Button>
         </CardFooter>
